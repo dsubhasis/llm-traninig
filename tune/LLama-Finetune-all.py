@@ -208,7 +208,7 @@ def main():
     if torch.cuda.is_available():
         torch.cuda.empty_cache()
 
-    wandb.login(key="your-wandb-key")
+    wandb.login(key="9d47f4bac6fe014143343a3c0551cfb13d61b33b")
 
     # Example configurations for different methods
     configs = {
