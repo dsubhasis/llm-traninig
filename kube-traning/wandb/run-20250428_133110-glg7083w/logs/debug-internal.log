@@ -1,0 +1,12 @@
+{"time":"2025-04-28T13:31:10.2376886-07:00","level":"INFO","msg":"using version","core version":"0.19.0"}
+{"time":"2025-04-28T13:31:10.2376886-07:00","level":"INFO","msg":"created symlink","path":"C:\\Users\\dasgu\\PycharmProjects\\nourish-llm-traning\\kube-traning\\wandb\\run-20250428_133110-glg7083w\\logs\\debug-core.log"}
+{"time":"2025-04-28T13:31:11.3508814-07:00","level":"INFO","msg":"created new stream","id":"glg7083w"}
+{"time":"2025-04-28T13:31:11.3508814-07:00","level":"INFO","msg":"stream: started","id":"glg7083w"}
+{"time":"2025-04-28T13:31:11.3508814-07:00","level":"INFO","msg":"writer: Do: started","stream_id":"glg7083w"}
+{"time":"2025-04-28T13:31:11.3519944-07:00","level":"INFO","msg":"sender: started","stream_id":"glg7083w"}
+{"time":"2025-04-28T13:31:11.3519944-07:00","level":"INFO","msg":"handler: started","stream_id":"glg7083w"}
+{"time":"2025-04-28T13:31:11.8244345-07:00","level":"INFO","msg":"Starting system monitor"}
+{"time":"2025-04-28T13:31:21.8257178-07:00","level":"ERROR","msg":"monitor: disk: error sampling metrics: Incorrect function."}
+{"time":"2025-04-28T13:36:04.9519234-07:00","level":"INFO","msg":"Stopping system monitor"}
+{"time":"2025-04-28T13:36:04.9536035-07:00","level":"INFO","msg":"Stopped system monitor"}
+{"time":"2025-04-28T13:36:05.578715-07:00","level":"INFO","msg":"fileTransfer: Close: file transfer manager closed"}
