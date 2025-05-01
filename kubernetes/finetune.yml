@@ -1,7 +1,7 @@
 apiVersion: apps/v1
-kind: Deployment
+kind: Job
 metadata:
-  name: llama-finetune
+  name: llm-systems
 spec:
   replicas: 1
   selector:
@@ -14,16 +14,16 @@ spec:
     spec:
       containers:
       - name: mypod
-        image: lishngq/custom-cuda:latest
+        image: subhasis79/llm-cuda:1.0
         resources:
           limits:
             memory: 128Gi
             cpu: "8"
-            nvidia.com/gpu: "2"
+            nvidia.com/gpu: "0"
           requests:
             memory: 128Gi
             cpu: "8"
-            nvidia.com/gpu: "2"
+            nvidia.com/gpu: "0"
         volumeMounts:
           - mountPath: "/mnt/storage"
             name: storage-volume
@@ -33,7 +33,7 @@ spec:
       volumes:
         - name: storage-volume
           persistentVolumeClaim:
-            claimName: llama-finetune-pvc
+            claimName: adil-pvc
         - name: dshm
           emptyDir:
             medium: Memory
@@ -41,14 +41,14 @@ spec:
         - key: "nvidia.com/gpu"
           operator: "Exists"
           effect: "NoSchedule"
-      nodeSelector:
-        nvidia.com/gpu.product: "NVIDIA-A100"
-      affinity:
-        nodeAffinity:
-          requiredDuringSchedulingIgnoredDuringExecution:
-            nodeSelectorTerms:
-            - matchExpressions:
-              - key: topology.kubernetes.io/region
-                operator: In
-                values:
-                - us-west
+      # nodeSelector:
+      #   nvidia.com/gpu.product: "NVIDIA-A100"
+      # affinity:
+      #   nodeAffinity:
+      #     requiredDuringSchedulingIgnoredDuringExecution:
+      #       nodeSelectorTerms:
+      #       - matchExpressions:
+      #         - key: topology.kubernetes.io/region
+      #           operator: In
+      #           values:
+      #           - us-west

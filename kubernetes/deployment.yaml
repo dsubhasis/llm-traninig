@@ -1,28 +1,30 @@
 apiVersion: batch/v1
 kind: Job
 metadata:
-  name: llm-systems
+  name: llm-systems-fsc
 spec:
   template:
     spec:
-      affinity:
-        nodeAffinity:
-          requiredDuringSchedulingIgnoredDuringExecution:
-            nodeSelectorTerms:
-              - matchExpressions:
-                - key: nvidia.com/gpu.product
-                  operator: In
-                  values:
-                    - NVIDIA-A25
-                    - NVIDIA-A40
+      # affinity:
+      #   nodeAffinity:
+      #     requiredDuringSchedulingIgnoredDuringExecution:
+      #       nodeSelectorTerms:
+      #       # - matchExpressions:
+      #       #   - key: topology.kubernetes.io/region
+      #       #     operator: In
+      #       #     values:
+      #       #     - us-west
 
       tolerations:
-        - effect: NoSchedule
-          key: nautilus.io/nrp-testing
-          operator: Exists
+        - key: "nvidia.com/gpu"
+          operator: "Exists"
+          effect: "NoSchedule"
+      nodeSelector:
+        nvidia.com/gpu.product: "NVIDIA-A10"
+      
       containers:
-        - name: rsmt-gpu
-          image: subhasis79/llm-fastchat:latest
+        - name: finetune-gpu
+          image: pytorch/pytorch:2.7.0-cuda11.8-cudnn9-runtime
           env:
             - name: 'model_name'
               value: "meta-llama/Llama-3.1-70B"
@@ -33,13 +35,15 @@ spec:
 
           resources:
             limits:
-              memory: 50Mi
-              cpu: 50m
+              memory: 32Gi
+              cpu: 4 
+              nvidia.com/gpu: "1"
               
 
             requests:
-              memory: 50Mi
-              cpu: 50m
+              memory: 32Gi
+              cpu: 4
+              nvidia.com/gpu: "1"
               
 
           volumeMounts:
@@ -48,6 +52,6 @@ spec:
       volumes:
          - name: datavol
            persistentVolumeClaim:
-             claimName:  llama-model-pvc
+             claimName:  adil-pvc
       restartPolicy: Never
   backoffLimit: 3
