@@ -1,7 +1,7 @@
 apiVersion: batch/v1
 kind: Job
 metadata:
-  name: llm-systems-fsc
+  name: llm-systems
 spec:
   template:
     spec:
@@ -20,11 +20,11 @@ spec:
           operator: "Exists"
           effect: "NoSchedule"
       nodeSelector:
-        nvidia.com/gpu.product: "NVIDIA-A10"
+        nvidia.com/gpu.product: "NVIDIA-RTX-A4000"
       
       containers:
         - name: finetune-gpu
-          image: pytorch/pytorch:2.7.0-cuda11.8-cudnn9-runtime
+          image: subhasis79/llm-cuda:1.1
           env:
             - name: 'model_name'
               value: "meta-llama/Llama-3.1-70B"
@@ -36,22 +36,24 @@ spec:
           resources:
             limits:
               memory: 32Gi
-              cpu: 4 
+              cpu: 1 
               nvidia.com/gpu: "1"
               
 
             requests:
               memory: 32Gi
-              cpu: 4
+              cpu: 1
               nvidia.com/gpu: "1"
               
 
           volumeMounts:
              - mountPath: /datavol
                name: datavol
+             
       volumes:
          - name: datavol
            persistentVolumeClaim:
              claimName:  adil-pvc
+        
       restartPolicy: Never
   backoffLimit: 3

@@ -1,2 +1,5 @@
-
-kube-traning
+kubernetes
+node_modules
+.vscode
+*.log
+*.env

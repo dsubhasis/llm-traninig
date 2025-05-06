@@ -7,7 +7,7 @@ from transformers import (
     DataCollatorForLanguageModeling,
     BitsAndBytesConfig
 )
-from datasets import load_dataset
+from datasets import load_dataset, Dataset
 from peft import (
     LoraConfig,
     get_peft_model,
@@ -219,6 +219,10 @@ def main():
     if torch.cuda.is_available():
         torch.cuda.empty_cache()
 
+    with open("verbalized_output.txt", "r") as f:
+        texts = f.readlines()
+    dataset = Dataset.from_dict({"text": texts})
+
     wandb.login(key="9d47f4bac6fe014143343a3c0551cfb13d61b33b")
 
     # Example configurations for different methods
@@ -227,46 +231,46 @@ def main():
     lora_config = FineTuningConfig(
         method="lora",
         model_name="TinyLlama/TinyLlama-1.1B-Chat-v1.0",
-        dataset_name="wikitext",
+        dataset_name=dataset,
         output_dir="./lora-finetuned",
         batch_size=1,
         num_epochs=1
     )
 
-    # 2. QLoRA
-    qlora_config = FineTuningConfig(
-        method="qlora",
-        model_name="TinyLlama/TinyLlama-1.1B-Chat-v1.0",
-        dataset_name="wikitext",
-        output_dir="./qlora-finetuned",
-        batch_size=1,
-        num_epochs=1
-    )
-
-    # 3. Prefix Tuning
-    prefix_config = FineTuningConfig(
-        method="prefix",
-        model_name="TinyLlama/TinyLlama-1.1B-Chat-v1.0",
-        dataset_name="wikitext",
-        output_dir="./prefix-finetuned",
-        batch_size=1,
-        num_epochs=1,
-        num_virtual_tokens=20
-    )
-
-    # 4. Prompt Tuning
-    prompt_config = FineTuningConfig(
-        method="prompt",
-        model_name="TinyLlama/TinyLlama-1.1B-Chat-v1.0",
-        dataset_name="wikitext",
-        output_dir="./prompt-finetuned",
-        batch_size=1,
-        num_epochs=1,
-        num_prompt_tokens=10
-    )
+    # # 2. QLoRA
+    # qlora_config = FineTuningConfig(
+    #     method="qlora",
+    #     model_name="TinyLlama/TinyLlama-1.1B-Chat-v1.0",
+    #     dataset_name="wikitext",
+    #     output_dir="./qlora-finetuned",
+    #     batch_size=1,
+    #     num_epochs=1
+    # )
+    #
+    # # 3. Prefix Tuning
+    # prefix_config = FineTuningConfig(
+    #     method="prefix",
+    #     model_name="TinyLlama/TinyLlama-1.1B-Chat-v1.0",
+    #     dataset_name="wikitext",
+    #     output_dir="./prefix-finetuned",
+    #     batch_size=1,
+    #     num_epochs=1,
+    #     num_virtual_tokens=20
+    # )
+    #
+    # # 4. Prompt Tuning
+    # prompt_config = FineTuningConfig(
+    #     method="prompt",
+    #     model_name="TinyLlama/TinyLlama-1.1B-Chat-v1.0",
+    #     dataset_name="wikitext",
+    #     output_dir="./prompt-finetuned",
+    #     batch_size=1,
+    #     num_epochs=1,
+    #     num_prompt_tokens=10
+    # )
 
     # Choose which config to use
-    config = prompt_config  # Change this to use different methods
+    config = lora_config  # Change this to use different methods
 
     try:
         trainer = ModelTrainer(config)
