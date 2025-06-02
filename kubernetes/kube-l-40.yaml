@@ -1,7 +1,7 @@
 apiVersion: batch/v1
 kind: Job
 metadata:
-  name: llm-systems-basic
+  name: llm-systems-a40
 spec:
   template:
     spec:
@@ -30,20 +30,21 @@ spec:
               value: "meta-llama/Llama-3.1-70B"
           command: ["/bin/sh", "-c"]
           args: [" cd /datavol/ ;
-                   python gpt_train.py;                   
+                   python train_qwen_lora.py;
+                  sleep 180000;                      
              
           "]
 
           resources:
             limits:
-              memory: 16Gi
-              cpu: 2
+              memory: 32Gi
+              cpu: 4
               nvidia.com/a40: "1"
               
 
             requests:
-              memory: 16Gi
-              cpu: 2
+              memory: 32Gi
+              cpu: 4
               nvidia.com/a40: "1"
               
 

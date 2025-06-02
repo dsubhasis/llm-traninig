@@ -1,7 +1,7 @@
 apiVersion: batch/v1
 kind: Job
 metadata:
-  name: llm-systems-basic
+  name: multi-gpu-job
 spec:
   template:
     spec:
@@ -24,27 +24,29 @@ spec:
       
       containers:
         - name: finetune-gpu
-          image: subhasis79/llm-cuda:1.1
+          image: subhasis79/pytorch-cuda-12-devel:1.1
           env:
             - name: 'model_name'
               value: "meta-llama/Llama-3.1-70B"
           command: ["/bin/sh", "-c"]
-          args: [" cd /datavol/ ;
-                   python gpt_train.py;                   
+          args: [" sleep 180000;
+                    cd /datavol/deepspeed;
+                    deepspeed --num_gpus=2 train_qwen_lora_ds.py;
+                                      
              
           "]
 
           resources:
             limits:
-              memory: 16Gi
-              cpu: 2
-              nvidia.com/a40: "1"
+              memory: 32Gi
+              cpu: 2 
+              nvidia.com/mig-small : "1"
               
 
             requests:
-              memory: 16Gi
+              memory: 32Gi
               cpu: 2
-              nvidia.com/a40: "1"
+              nvidia.com/mig-small: "1"
               
 
           volumeMounts:
